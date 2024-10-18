@@ -30,8 +30,17 @@ module.exports = async function signupUser(req, res) {
 		const refreshToken = await signRefreshToken({ id: createNewUser.id })
 
 		// create cookies
-		res.cookie('accessToken', accessToken, { httpOnly: true })
-		res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 })
+		res.cookie('accessToken', accessToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV == 'production' ? true : false,
+			sameSite: 'Strict',
+		})
+		res.cookie('refreshToken', refreshToken, {
+			httpOnly: true,
+			maxAge: 1000 * 60 * 60 * 24 * 30,
+			secure: process.env.NODE_ENV == 'production' ? true : false,
+			sameSite: 'Strict',
+		})
 
 		res.status(201).json({ status: 201, message: 'Successfully created user', user: createNewUser })
 	} catch (error) {
