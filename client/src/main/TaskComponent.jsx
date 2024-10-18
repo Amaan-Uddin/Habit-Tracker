@@ -12,7 +12,7 @@ function TaskComponent() {
 	}, [setTasks])
 
 	useEffect(() => {
-		const socket = new WebSocket('ws://localhost:3000')
+		const socket = new WebSocket(import.meta.env.VITE_WS_URL)
 
 		socket.addEventListener('message', (msgEvent) => {
 			const message = JSON.parse(msgEvent.data)
